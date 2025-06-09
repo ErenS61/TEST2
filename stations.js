@@ -1,6 +1,7 @@
 // Liste des stations disponibles
 const stations = [
     { id: "68400001", nom: "Super U Riedisheim" },
+    { id: "68000020", nom: "ENI Colmar" },
     
     // Carrefour
     { id: "68200004", nom: "Carrefour Mulhouse Dornach" },
