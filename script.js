@@ -161,16 +161,22 @@ fetch(url, { cache: "no-store" })
   });
 
 // Mise à jour automatique à l'heure pile
-function actualiserALHeure() {
+function actualiserToutesLes20SecondesPile() {
   const maintenant = new Date();
-  const prochainHeure = new Date(maintenant);
-  prochainHeure.setHours(maintenant.getHours() + 1);
-  prochainHeure.setMinutes(0, 0, 0);
-  const delai = prochainHeure.getTime() - maintenant.getTime();
-  setTimeout(() => location.reload(), delai);
+  const secondes = maintenant.getSeconds();
+  const millisecondes = maintenant.getMilliseconds();
+
+  // Calcule combien de temps il reste jusqu’au prochain multiple de 20 secondes
+  const secondesRestantes = 20 - (secondes % 20);
+  const delai = (secondesRestantes * 1000) - millisecondes;
+
+  setTimeout(() => {
+    location.reload();
+  }, delai);
 }
 
-actualiserALHeure();
+actualiserToutesLes20SecondesPile();
+
 
 
 function refreshPage() {
