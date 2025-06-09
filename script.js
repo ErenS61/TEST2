@@ -178,9 +178,7 @@ function actualiserToutesLes20SecondesPile() {
 //actualiserToutesLes20SecondesPile();
 
 function refreshPage() {
-  //location.reload(); // Rafraîchit la page
-  //window.location.reload();
-  window.location.href = window.location.href;
+  location.reload(); // Rafraîchit la page
 }
 
 function scrollToTop() {
