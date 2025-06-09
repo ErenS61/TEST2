@@ -160,18 +160,6 @@ fetch(url, { cache: "no-store" })
     console.error("Erreur lors du chargement des données :", err);
   });
 
-function refreshPage() {
-    location.reload(); // Rafraîchit la page
-}
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth" // Défilement fluide vers le haut
-    });
-}
-
-
 // Mise à jour automatique à l'heure pile
 function actualiserALHeure() {
   const maintenant = new Date();
@@ -183,3 +171,15 @@ function actualiserALHeure() {
 }
 
 actualiserALHeure();
+
+
+function refreshPage() {
+    location.reload(); // Rafraîchit la page
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth" // Défilement fluide vers le haut
+    });
+}
