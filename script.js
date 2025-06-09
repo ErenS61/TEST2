@@ -168,24 +168,24 @@ function actualiserToutesLes20SecondesPile() {
 
   // Calcule combien de temps il reste jusqu’au prochain multiple de 20 secondes
   const secondesRestantes = 20 - (secondes % 20);
-  const delai = (secondesRestantes * 1000) - millisecondes;
+  const delai = secondesRestantes * 1000 - millisecondes;
 
   setTimeout(() => {
     location.reload();
   }, delai);
 }
 
-actualiserToutesLes20SecondesPile();
-
-
+//actualiserToutesLes20SecondesPile();
 
 function refreshPage() {
-    location.reload(); // Rafraîchit la page
+  //location.reload(); // Rafraîchit la page
+  //window.location.reload();
+  window.location.href = window.location.href;
 }
 
 function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth" // Défilement fluide vers le haut
-    });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth" // Défilement fluide vers le haut
+  });
 }
