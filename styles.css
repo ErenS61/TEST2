@@ -212,11 +212,13 @@ h1 {
 
   .type {
     font-size: 1.2rem;
+    font-weight: bold;
   }
 
   .prix {
     font-size: 2.5rem;
     margin-top: 10px;
+    font-weight: bold;
   }
 
   .rupture .message {
@@ -242,6 +244,7 @@ h1 {
   .prix {
     font-size: 2.5rem;
     margin-top: 10px;
+    font-weight: bold;
   }
 
   .rupture .message {
