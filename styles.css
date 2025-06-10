@@ -8,7 +8,8 @@ body {
 body {
   background: #1a1a1a;
   color: #ffffff;
-  font-family: "Segoe UI", sans-serif;
+  /*font-family: "Segoe UI", sans-serif;*/
+  font-family: "Montserrat", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -67,7 +68,9 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
 }
 
 .carburant {
@@ -113,6 +116,7 @@ h1 {
 .prix {
   font-size: 2.6rem;
   font-weight: bold;
+  margin-top: 0.6rem;
   margin-bottom: 0.4rem;
   color: #ffffff;
 }
@@ -124,14 +128,15 @@ h1 {
 }
 
 .maj {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #aaaaaa;
   margin-top: 1.2rem;
 }
 
 /* Clignotement de la bordure pour rupture */
 @keyframes blink-border {
-  0%, 100% {
+  0%,
+  100% {
     border-color: red;
     box-shadow: 0 0 15px #ff000033;
   }
@@ -153,29 +158,29 @@ h1 {
 
 /* Style général pour les boutons flottants */
 .floating-buttons {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espacement entre les boutons */
-    z-index: 9999;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacement entre les boutons */
+  z-index: 9999;
 }
 
 .floating-buttons button {
-    background-color: rgba(128, 128, 128, 0.5); /* Gris avec transparence */
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    padding: 15px;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
+  background-color: rgba(128, 128, 128, 0.5); /* Gris avec transparence */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
 }
 
 .floating-buttons button:hover {
-    background-color: rgba(128, 128, 128, 0.8); /* Plus foncé au survol */
+  background-color: rgba(128, 128, 128, 0.8); /* Plus foncé au survol */
 }
 
 /* Responsive adjustments */
