@@ -239,6 +239,10 @@ h1 {
   .maj {
     font-size: 0.9rem;
   }
+
+  .footer {
+    font-size: 0.75rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -262,5 +266,9 @@ h1 {
 
   .maj {
     font-size: 0.85rem;
+  }
+
+  .footer {
+    font-size: 0.75rem;
   }
 }
