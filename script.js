@@ -76,7 +76,7 @@ const params = new URLSearchParams({
   limit: "1",
   refine: `id:${stationId}`,
   lang: "fr",
-  timezone: "Europe/Paris",
+  timezone: "UTC",
   _: Date.now().toString() // désactive le cache
 });
 
@@ -140,7 +140,7 @@ fetch(url, { cache: "no-store" })
           year: "numeric",
           hour: "2-digit",
           minute: "2-digit",
-          timeZone: "Europe/Paris"
+          timeZone: "UTC"
         });
       }
 
@@ -151,7 +151,7 @@ fetch(url, { cache: "no-store" })
           <i class="${icone}" style="color: ${couleur}; margin-right: 0.5rem;"></i>${nom}
         </div>
         <div class="prix">${prix ? prix.toFixed(3) + " €" : "N/A"}</div>
-        <div class="maj">Dernière MàJ : ${majFormatted}</div>
+        <div class="maj">Dernière MàJ : ${majFormatted} (UTC)</div>
       `;
       container.appendChild(block);
     }

@@ -142,9 +142,9 @@ h1 {
 }
 
 .maj {
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #aaaaaa;
-  margin-top: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 /* Clignotement de la bordure pour rupture */
