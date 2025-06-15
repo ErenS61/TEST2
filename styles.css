@@ -47,16 +47,28 @@ h1 {
   color: #ddd;
 }
 
-/* Menu déroulant */
+#stationSelectorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+#villeSelector,
 #stationSelector {
-  margin: 0 auto 2rem;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   background: #2a2a2a;
   color: #ffffff;
   border: 1px solid #555;
   border-radius: 6px;
-  width: 260px; /* largeur fixe adaptée à ton design */
+  width: 260px;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+  appearance: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -212,10 +224,6 @@ h1 {
 
   .station-info {
     font-size: 1rem;
-  }
-
-  #stationSelector {
-    font-size: 0.95rem;
   }
 
   .carburant,
