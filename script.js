@@ -7,9 +7,17 @@ if ("serviceWorker" in navigator && "caches" in window) {
   });
 }
 
+// Migration des anciens favoris (objet) vers nouveau format (tableau)
+const oldFavorites = JSON.parse(localStorage.getItem("fuelFavorites"));
+if (oldFavorites && !Array.isArray(oldFavorites)) {
+  const newFavorites = Object.values(oldFavorites);
+  localStorage.setItem("fuelFavorites", JSON.stringify(newFavorites));
+}
+
 // Variables pour stocker les sélections
 const selectedCity = localStorage.getItem("selectedCity") || "";
 const selectedStationId = localStorage.getItem("stationId") || "";
+let currentStationData = null;
 
 // Création des menus déroulants
 function createVilleEtStationSelectors() {
@@ -72,6 +80,7 @@ function createVilleEtStationSelectors() {
     document.getElementById("carburantContainer").innerHTML = "";
     document.getElementById("pageTitle").textContent = "⛽ Prix Carburants";
     document.getElementById("stationInfo").innerHTML = "";
+    document.getElementById("favoriteButton").style.display = "none";
   });
 
   // Gestion du changement de station
@@ -86,6 +95,7 @@ function createVilleEtStationSelectors() {
       document.getElementById("carburantContainer").innerHTML = "";
       document.getElementById("pageTitle").textContent = "⛽ Prix Carburants";
       document.getElementById("stationInfo").innerHTML = "";
+      document.getElementById("favoriteButton").style.display = "none";
     }
   });
 
@@ -165,6 +175,21 @@ if (selectedStationId) {
       const record = data.results[0];
       if (!record) return;
 
+      // Stocker les données de la station courante
+      currentStationData = {
+        ...record,
+        nom: nomStation
+      };
+
+      // Afficher le bouton favori
+      const favButton = document.getElementById("favoriteButton");
+      favButton.style.display = "block";
+
+      // Vérifier si la station est déjà favorite (version optimisée)
+      const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
+      const isFavorite = favorites.some((fav) => fav.id === selectedStationId);
+      favButton.classList.toggle("active", isFavorite);
+
       const stationInfo = document.getElementById("stationInfo");
       stationInfo.innerHTML = `<strong>${record.adresse}</strong><br>${record.cp} ${record.ville}, ${record.departement}, ${record.region}`;
 
@@ -221,6 +246,126 @@ if (selectedStationId) {
   // Si aucune station sélectionnée, vider l'affichage
   document.getElementById("carburantContainer").innerHTML = "";
   document.getElementById("stationInfo").innerHTML = "";
+  document.getElementById("favoriteButton").style.display = "none";
+}
+
+// Fonctions pour les favoris
+function toggleFavorite() {
+  if (!selectedStationId || !currentStationData) return;
+
+  const favorites = JSON.parse(localStorage.getItem("fuelFavorites") || "[]");
+  const favButton = document.getElementById("favoriteButton");
+  const existingIndex = favorites.findIndex((fav) => fav.id === selectedStationId);
+
+  if (existingIndex >= 0) {
+    favorites.splice(existingIndex, 1);
+    favButton.classList.remove("active");
+    showSystemMessage("Station retirée des favoris", true); // ← true pour rouge
+  } else {
+    favorites.push({
+      id: selectedStationId,
+      name:
+        currentStationData.nom || document.getElementById("pageTitle").textContent.replace("⛽ Prix Carburants - ", ""),
+      address: currentStationData.adresse || "",
+      city: currentStationData.ville || ""
+    });
+    favButton.classList.add("active");
+    showSystemMessage("Station ajoutée aux favoris"); // ← reste vert
+  }
+
+  localStorage.setItem("fuelFavorites", JSON.stringify(favorites));
+}
+
+function showFavorites() {
+  const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
+  const modal = document.createElement("div");
+  modal.className = "favorites-modal";
+
+  let favoritesHTML = "";
+  if (favorites.length === 0) {
+    favoritesHTML = '<div class="no-favorites">Aucune station favorite</div>';
+  } else {
+    // Affiche dans l'ordre du tableau (déjà ordonné par ajout)
+    favorites.forEach(function (station) {
+      favoritesHTML += `<div class="favorite-station" onclick="selectFavorite('${station.id}')">
+        <div class="name">${station.name}</div>
+        <div class="address">${station.address}, ${station.city}</div>
+      </div>`;
+    });
+  }
+
+  modal.innerHTML = `
+    <div class="favorites-content">
+      <button class="close-favorites" onclick="this.parentElement.parentElement.remove()">&times;</button>
+      <h2>Stations Favorites (${favorites.length})</h2>
+      <div id="favoritesList">${favoritesHTML}</div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.style.display = "flex";
+}
+
+function selectFavorite(stationId) {
+  const villeSelect = document.getElementById("villeSelector");
+  const stationSelect = document.getElementById("stationSelector");
+
+  function handleStationSelection(ville, stationId) {
+    villeSelect.value = ville;
+    villeSelect.dispatchEvent(new Event("change"));
+
+    function selectStation() {
+      stationSelect.value = stationId;
+      stationSelect.dispatchEvent(new Event("change"));
+
+      // ↓↓↓ AJOUT CRITIQUE : Mettre à jour l'étoile IMMÉDIATEMENT ↓↓↓
+      const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
+      const favButton = document.getElementById("favoriteButton");
+      if (favorites.some((fav) => fav.id === stationId)) {
+        favButton.classList.add("active");
+      } else {
+        favButton.classList.remove("active");
+      }
+      // ↑↑↑ FIN DE L'AJOUT ↑↑↑
+
+      document.querySelector(".favorites-modal")?.remove();
+    }
+
+    setTimeout(selectStation, 100);
+  }
+
+  for (const [ville, stations] of Object.entries(stationsParVille)) {
+    const station = findStationById(stations, stationId);
+    if (station) {
+      handleStationSelection(ville, stationId);
+      return;
+    }
+  }
+}
+
+// Fonction helper pour trouver une station par ID
+function findStationById(stations, id) {
+  return stations.find(function (s) {
+    return s.id === id;
+  });
+}
+
+function showSystemMessage(message, isError = false) {
+  const msg = document.createElement("div");
+  msg.className = "system-message";
+  msg.textContent = message;
+
+  // Ajout de la classe pour les erreurs
+  if (isError) {
+    msg.classList.add("error-message");
+  }
+
+  document.body.appendChild(msg);
+
+  setTimeout(() => {
+    msg.style.opacity = "0";
+    setTimeout(() => msg.remove(), 500);
+  }, 3000);
 }
 
 // Mise à jour automatique à l'heure pile
@@ -230,7 +375,9 @@ function actualiserALHeure() {
   prochainHeure.setHours(maintenant.getHours() + 1);
   prochainHeure.setMinutes(0, 0, 0);
   const delai = prochainHeure.getTime() - maintenant.getTime();
-  setTimeout(() => location.reload(), delai);
+  setTimeout(function () {
+    location.reload();
+  }, delai);
 }
 actualiserALHeure();
 
@@ -241,3 +388,6 @@ function refreshPage() {
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+// Afficher le bouton des favoris dès le chargement
+document.getElementById("favoritesButton").style.display = "block";
