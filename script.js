@@ -382,7 +382,6 @@ function actualiserALHeure() {
 }
 actualiserALHeure();
 
-
 function showMap() {
   const modal = document.createElement("div");
   modal.className = "map-modal";
@@ -411,14 +410,11 @@ function showMap() {
       const map = L.map("map").setView([userLat, userLon], 13);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a>',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a>'
       }).addTo(map);
 
       // Marqueur utilisateur
-      L.marker([userLat, userLon], { title: "Votre position" })
-        .addTo(map)
-        .bindPopup("Vous êtes ici")
-        .openPopup();
+      L.marker([userLat, userLon], { title: "Votre position" }).addTo(map).bindPopup("Vous êtes ici").openPopup();
 
       // Vérifier toutes les stations
       Object.entries(stationsParVille).forEach(([ville, stations]) => {
@@ -430,7 +426,7 @@ function showMap() {
             select: "id, geom",
             limit: "1",
             refine: `id:${stationId}`,
-            _: Date.now().toString(),
+            _: Date.now().toString()
           });
           const url = `${baseUrl}?${params.toString()}`;
 
@@ -440,18 +436,21 @@ function showMap() {
               const record = data.results[0];
               if (!record || !record.geom) return;
 
-              const lat = record.geom.lat;
-              const lon = record.geom.lon;
+              let lat, lon;
+              if (record.geom.coordinates) {
+                lon = record.geom.coordinates[0];
+                lat = record.geom.coordinates[1];
+              } else {
+                return;
+              }
 
               const dist = getDistanceFromLatLonInKm(userLat, userLon, lat, lon);
 
               if (dist <= 10) {
                 L.marker([lat, lon], { title: station.nom })
                   .addTo(map)
-                  .bindPopup(
-                    `<b>${station.nom}</b><br>${ville}<br>À ${dist.toFixed(1)} km`
-                  )
-                  .on("click", () => selectFavorite(stationId)); // ✅ plus de warning
+                  .bindPopup(`<b>${station.nom}</b><br>${ville}<br>À ${dist.toFixed(1)} km`)
+                  .on("click", () => selectFavorite(stationId));
               }
             })
             .catch((err) => console.error("Erreur fetch station:", err));
@@ -464,11 +463,6 @@ function showMap() {
     }
   );
 }
-
-
-
-
-
 
 function refreshPage() {
   location.reload();
