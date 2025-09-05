@@ -261,7 +261,7 @@ function toggleFavorite() {
   if (existingIndex >= 0) {
     favorites.splice(existingIndex, 1);
     favButton.classList.remove("active");
-    showSystemMessage("Station retirée des favoris", true); // ← true pour rouge
+    showSystemMessage("Station retirée des favoris", true);
   } else {
     favorites.push({
       id: selectedStationId,
@@ -271,7 +271,7 @@ function toggleFavorite() {
       city: currentStationData.ville || ""
     });
     favButton.classList.add("active");
-    showSystemMessage("Station ajoutée aux favoris"); // ← reste vert
+    showSystemMessage("Station ajoutée aux favoris");
   }
 
   localStorage.setItem("fuelFavorites", JSON.stringify(favorites));
@@ -319,7 +319,7 @@ function selectFavorite(stationId) {
       stationSelect.value = stationId;
       stationSelect.dispatchEvent(new Event("change"));
 
-      // ↓↓↓ AJOUT CRITIQUE : Mettre à jour l'étoile IMMÉDIATEMENT ↓↓↓
+      // Mettre à jour l'étoile IMMÉDIATEMENT
       const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
       const favButton = document.getElementById("favoriteButton");
       if (favorites.some((fav) => fav.id === stationId)) {
@@ -327,7 +327,6 @@ function selectFavorite(stationId) {
       } else {
         favButton.classList.remove("active");
       }
-      // ↑↑↑ FIN DE L'AJOUT ↑↑↑
 
       document.querySelector(".favorites-modal")?.remove();
     }
@@ -391,7 +390,7 @@ function showMap() {
     <div class="map-content">
       <button class="close-map" onclick="this.parentElement.parentElement.remove()">&times;</button>
       <h2>Carte des stations</h2>
-      <div id="map" style="width:100%;height:80vh;border-radius:10px;"></div>
+      <div id="map" style="width:100%;height:75vh;border-radius:8px;"></div>
     </div>
   `;
 
@@ -460,20 +459,32 @@ function showMap() {
         const lon = record.geom.lon;
         const lat = record.geom.lat;
 
+        // Modifié: Mise en gras de "Gazole" et "SP95-E10"
         const popupContent = `
           <b>${record.nom || station.nom}</b><br>
           ${record.adresse || ''}, ${record.ville || ville}<br>
           <br>
-          ${record.gazole_prix ? `Gazole: ${record.gazole_prix.toFixed(3)}€` : ''}
-          ${record.e10_prix ? `<br>SP95-E10: ${record.e10_prix.toFixed(3)}€` : ''}
+          ${record.gazole_prix ? `<b>Gazole</b> : ${record.gazole_prix.toFixed(3)} €` : ''}
+          ${record.e10_prix ? `<br><b>SP95-E10</b> : ${record.e10_prix.toFixed(3)} €` : ''}
           <br><button onclick="selectStationFromMap('${station.id}')" 
-               style="margin-top:8px;padding:4px 8px;background:#00ffcc;border:none;border-radius:4px;cursor:pointer">
+               style="margin-top:8px;padding:4px 8px;background:#00ffcc;border:none;border-radius:4px;cursor:pointer;color:#1a1a1a;font-weight:bold">
                Voir détails
              </button>
         `;
 
+        // Modifié: Utilisation d'un marqueur personnalisé
+        const customIcon = L.divIcon({
+          className: 'custom-map-marker',
+          html: `<div style="background-color:#00ffcc; width:24px; height:24px; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(0,0,0,0.5)">
+                   <i class="fa-solid fa-gas-pump" style="color:#1a1a1a; font-size:12px"></i>
+                 </div>`,
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+
         L.marker([lat, lon], { 
-          title: record.nom || station.nom 
+          title: record.nom || station.nom,
+          icon: customIcon
         })
           .addTo(map)
           .bindPopup(popupContent);
@@ -532,7 +543,6 @@ function handleStationSelection(ville, stationId) {
     document.querySelector('.map-modal')?.remove();
   }, 100);
 }
-
 
 function refreshPage() {
   location.reload();
