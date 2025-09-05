@@ -17,6 +17,9 @@
       src="https://cdn.counter.dev/script.js"
       data-id="a7ac3ce3-eda1-4655-a4d1-5eb64b0d593f"
       data-utcoffset="1"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </head>
   <body>
     <div>
@@ -32,6 +35,11 @@
 
     <!-- Boutons flottants -->
     <div class="floating-buttons">
+      <!-- Bouton Carte -->
+      <button class="map-button" onclick="showMap()" id="mapButton">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </button>
+
       <!-- Bouton pour ajouter/enlever des favoris -->
       <button class="favorite-button" onclick="toggleFavorite()" id="favoriteButton" style="display: none">
         <i class="fa-solid fa-star"></i>

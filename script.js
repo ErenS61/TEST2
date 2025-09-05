@@ -149,7 +149,8 @@ if (selectedStationId) {
       "sp95_prix",
       "sp95_maj",
       "carburants_indisponibles",
-      "carburants_rupture_temporaire"
+      "carburants_rupture_temporaire",
+      "geom"
     ].join(", "),
     limit: "1",
     refine: `id:${selectedStationId}`,
@@ -380,6 +381,94 @@ function actualiserALHeure() {
   }, delai);
 }
 actualiserALHeure();
+
+
+function showMap() {
+  const modal = document.createElement("div");
+  modal.className = "map-modal";
+
+  modal.innerHTML = `
+    <div class="map-content">
+      <button class="close-map" onclick="this.parentElement.parentElement.remove()">&times;</button>
+      <h2>Stations dans un rayon de 10 km</h2>
+      <div id="map" style="height: 70vh; width: 100%; border-radius: 10px;"></div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.style.display = "flex";
+
+  if (!navigator.geolocation) {
+    showSystemMessage("La géolocalisation n'est pas supportée", true);
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const userLat = pos.coords.latitude;
+      const userLon = pos.coords.longitude;
+
+      const map = L.map("map").setView([userLat, userLon], 13);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a>',
+      }).addTo(map);
+
+      // Marqueur utilisateur
+      L.marker([userLat, userLon], { title: "Votre position" })
+        .addTo(map)
+        .bindPopup("Vous êtes ici")
+        .openPopup();
+
+      // Vérifier toutes les stations
+      Object.entries(stationsParVille).forEach(([ville, stations]) => {
+        stations.forEach((station) => {
+          const stationId = station.id; // ✅ correction : variable locale
+          const baseUrl =
+            "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records";
+          const params = new URLSearchParams({
+            select: "id, geom",
+            limit: "1",
+            refine: `id:${stationId}`,
+            _: Date.now().toString(),
+          });
+          const url = `${baseUrl}?${params.toString()}`;
+
+          fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+              const record = data.results[0];
+              if (!record || !record.geom) return;
+
+              const lat = record.geom.lat;
+              const lon = record.geom.lon;
+
+              const dist = getDistanceFromLatLonInKm(userLat, userLon, lat, lon);
+
+              if (dist <= 10) {
+                L.marker([lat, lon], { title: station.nom })
+                  .addTo(map)
+                  .bindPopup(
+                    `<b>${station.nom}</b><br>${ville}<br>À ${dist.toFixed(1)} km`
+                  )
+                  .on("click", () => selectFavorite(stationId)); // ✅ plus de warning
+              }
+            })
+            .catch((err) => console.error("Erreur fetch station:", err));
+        });
+      });
+    },
+    (err) => {
+      console.error(err);
+      showSystemMessage("Impossible d'obtenir votre position", true);
+    }
+  );
+}
+
+
+
+
+
 
 function refreshPage() {
   location.reload();
