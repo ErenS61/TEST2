@@ -389,7 +389,7 @@ function showMap() {
   modal.innerHTML = `
     <div class="map-content">
       <button class="close-map" onclick="this.parentElement.parentElement.remove()">&times;</button>
-      <h2>Carte des stations</h2>
+      <h2>🗺️ Carte des stations</h2>
       <div id="map" style="width:100%;height:75vh;border-radius:8px;"></div>
     </div>
   `;
@@ -406,11 +406,11 @@ function showMap() {
   // Localiser l'utilisateur
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      function(pos) {
+      function (pos) {
         const lat = pos.coords.latitude;
         const lon = pos.coords.longitude;
         map.setView([lat, lon], 13);
-        
+
         L.circleMarker([lat, lon], {
           radius: 8,
           fillColor: "#3388ff",
@@ -418,9 +418,14 @@ function showMap() {
           weight: 2,
           opacity: 1,
           fillOpacity: 0.9
-        }).addTo(map).bindPopup("<b>📍 Vous êtes ici</b>").openPopup();
+        })
+          .addTo(map)
+          .bindPopup("<b>📍 Vous êtes ici</b>", {
+            className: "user-location-popup" // ← classe personnalisée
+          })
+          .openPopup();
       },
-      function(err) {
+      function (err) {
         console.warn("Géolocalisation refusée :", err.message);
       }
     );
@@ -428,7 +433,7 @@ function showMap() {
 
   // Compter le nombre total de stations
   let stationsLoaded = 0;
-  const totalStations = Object.values(stationsParVille).reduce(function(acc, stations) {
+  const totalStations = Object.values(stationsParVille).reduce(function (acc, stations) {
     return acc + stations.length;
   }, 0);
 
@@ -441,13 +446,15 @@ function showMap() {
     }
   }
 
-  // Fonction pour charger une station individuelle
+  // Fonction pour charger une station individuelle (version améliorée)
   function loadStation(station, ville) {
     const url = `https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?select=id,geom,adresse,ville,gazole_prix,e10_prix&refine=id:${station.id}&limit=1&_=${Date.now()}`;
 
     fetch(url)
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
         const record = data.results[0];
         if (!record || !record.geom || !record.geom.lon || !record.geom.lat) {
           console.warn("Coordonnées manquantes pour:", station.nom);
@@ -459,30 +466,56 @@ function showMap() {
         const lon = record.geom.lon;
         const lat = record.geom.lat;
 
-        // Modifié: Mise en gras de "Gazole" et "SP95-E10"
-        const popupContent = `
-          <b>${record.nom || station.nom}</b><br>
-          ${record.adresse || ''}, ${record.ville || ville}<br>
-          <br>
-          ${record.gazole_prix ? `<b>Gazole</b> : ${record.gazole_prix.toFixed(3)} €` : ''}
-          ${record.e10_prix ? `<br><b>SP95-E10</b> : ${record.e10_prix.toFixed(3)} €` : ''}
-          <br><button onclick="selectStationFromMap('${station.id}')" 
-               style="margin-top:8px;padding:4px 8px;background:#00ffcc;border:none;border-radius:4px;cursor:pointer;color:#1a1a1a;font-weight:bold">
-               Voir détails
-             </button>
-        `;
+        // Construction du contenu du popup avec logo
+        let popupContent = `
+  <div class="popup-container">
+    <div class="popup-header">
+      <b>${record.nom || station.nom}</b><br>
+      ${record.adresse || ""}, ${record.ville || ville}
+    </div>
+    <div class="popup-prices-with-logo">
+      <div class="popup-prices">
+`;
 
-        // Modifié: Utilisation d'un marqueur personnalisé
+        if (record.gazole_prix) {
+          popupContent += `
+        <div class="price-line">
+          Gazole : <span class="fuel-price">${record.gazole_prix.toFixed(3)} €</span>
+        </div>
+  `;
+        }
+
+        if (record.e10_prix) {
+          popupContent += `
+        <div class="price-line">
+          SP95-E10 : <span class="fuel-price">${record.e10_prix.toFixed(3)} €</span>
+        </div>
+  `;
+        }
+
+        popupContent += `
+      </div>
+      ${station.logo ? `<div class="popup-logo"><img src="${station.logo}" alt="Logo"></div>` : ""}
+    </div>
+    <div class="popup-footer">
+      <button onclick="selectStationFromMap('${station.id}')" class="popup-button">
+        Voir détails
+      </button>
+    </div>
+  </div>
+`;
+
+        // Marqueur personnalisé
         const customIcon = L.divIcon({
-          className: 'custom-map-marker',
+          className: "custom-map-marker",
           html: `<div style="background-color:#00ffcc; width:24px; height:24px; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px rgba(0,0,0,0.5)">
-                   <i class="fa-solid fa-gas-pump" style="color:#1a1a1a; font-size:12px"></i>
-                 </div>`,
+                 <i class="fa-solid fa-gas-pump" style="color:#1a1a1a; font-size:12px"></i>
+               </div>`,
           iconSize: [24, 24],
           iconAnchor: [12, 12]
         });
 
-        L.marker([lat, lon], { 
+        L.marker([lat, lon], {
           title: record.nom || station.nom,
           icon: customIcon
         })
@@ -492,7 +525,7 @@ function showMap() {
         stationsLoaded++;
         checkAllStationsLoaded();
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.error("Erreur chargement station:", station.nom, err);
         stationsLoaded++;
         checkAllStationsLoaded();
@@ -500,8 +533,8 @@ function showMap() {
   }
 
   // Charger toutes les stations
-  Object.entries(stationsParVille).forEach(function([ville, stations]) {
-    stations.forEach(function(station) {
+  Object.entries(stationsParVille).forEach(function ([ville, stations]) {
+    stations.forEach(function (station) {
       loadStation(station, ville);
     });
   });
@@ -510,14 +543,14 @@ function showMap() {
 // Fonction pour sélectionner une station depuis la carte
 function selectStationFromMap(stationId) {
   let found = false;
-  
-  Object.entries(stationsParVille).forEach(function([ville, stations]) {
+
+  Object.entries(stationsParVille).forEach(function ([ville, stations]) {
     if (found) return;
-    
-    const station = stations.find(function(s) { 
-      return s.id === stationId; 
+
+    const station = stations.find(function (s) {
+      return s.id === stationId;
     });
-    
+
     if (station) {
       found = true;
       handleStationSelection(ville, stationId);
@@ -531,16 +564,16 @@ function selectStationFromMap(stationId) {
 
 // Fonction helper pour la sélection de station
 function handleStationSelection(ville, stationId) {
-  const villeSelect = document.getElementById('villeSelector');
-  const stationSelect = document.getElementById('stationSelector');
-  
+  const villeSelect = document.getElementById("villeSelector");
+  const stationSelect = document.getElementById("stationSelector");
+
   villeSelect.value = ville;
-  villeSelect.dispatchEvent(new Event('change'));
-  
+  villeSelect.dispatchEvent(new Event("change"));
+
   setTimeout(function selectStation() {
     stationSelect.value = stationId;
-    stationSelect.dispatchEvent(new Event('change'));
-    document.querySelector('.map-modal')?.remove();
+    stationSelect.dispatchEvent(new Event("change"));
+    document.querySelector(".map-modal")?.remove();
   }, 100);
 }
 

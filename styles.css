@@ -399,10 +399,32 @@ h1 {
   border: none !important;
 }
 
-/* Style pour les popups de la carte */
+/* Popup par défaut (stations) */
 .leaflet-popup-content {
   font-family: "Montserrat", sans-serif;
   margin: 12px;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-width: 260px; /* largeur fixe pour les stations */
+  line-height: 1.4;
+}
+
+/* Popup spécifique pour la position utilisateur */
+.user-location-popup .leaflet-popup-content {
+  max-width: none !important; /* pas de limite */
+  min-width: 107px; /* un peu de largeur mini */
+  text-align: center;
+  font-weight: bold;
+  color: #00ffcc;
+}
+
+/* Titre + adresse */
+.popup-header {
+  margin-bottom: 10px; /* espace entre adresse et prix */
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal; /* forcer la coupure si trop long */
 }
 
 .leaflet-popup-content b {
@@ -430,6 +452,72 @@ h1 {
   margin-top: 0.5rem;
   margin-bottom: 0.8rem;
   font-size: 1.5rem;
+}
+
+/* Bloc principal */
+.popup-container {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  width: 260px !important;
+}
+
+/* Prix + logo alignés */
+.popup-prices-with-logo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px; /* espace avec le bouton */
+}
+
+/* Liste des prix */
+.popup-prices {
+  flex: 1;
+}
+
+/* Ligne carburant + prix rapprochés */
+.price-line {
+  font-size: 14px;
+  margin: 2px 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px; /* ← petit espace seulement */
+}
+
+.fuel-price {
+  font-weight: bold;
+}
+
+/* Logo aligné à droite */
+.popup-logo img {
+  height: 38px;
+  width: auto;
+  opacity: 0.9;
+  margin-right: 10px; /* ← décalage vers la gauche */
+}
+
+/* Pied du popup avec bouton */
+.popup-footer {
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Bouton sur toute la largeur */
+.popup-button {
+  display: block;
+  width: 100%; /* ← prend toute la largeur */
+  background: #00ffcc;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.popup-button:hover {
+  background: #00ccaa;
 }
 
 /* Responsive adjustments */
