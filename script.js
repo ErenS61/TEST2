@@ -298,7 +298,7 @@ function showFavorites() {
   modal.innerHTML = `
     <div class="favorites-content">
       <button class="close-favorites" onclick="this.parentElement.parentElement.remove()">&times;</button>
-      <h2>Stations Favorites (${favorites.length})</h2>
+      <h2>⭐ Stations Favorites (${favorites.length})</h2>
       <div id="favoritesList">${favoritesHTML}</div>
     </div>
   `;
