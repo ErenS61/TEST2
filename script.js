@@ -403,33 +403,99 @@ function showMap() {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // Localiser l'utilisateur
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function (pos) {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        map.setView([lat, lon], 13);
+  // Ajouter le bouton de recentrage avec le même style que les autres boutons
+  const locateControl = L.control({ position: "bottomright" });
+  locateControl.onAdd = function (map) {
+    const div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-locate-control");
+    div.innerHTML = `
+      <a href="#" title="Se localiser" class="locate-button">
+        <i class="fa-solid fa-location-crosshairs"></i>
+      </a>
+    `;
+    
+    div.onclick = function (e) {
+      L.DomEvent.stopPropagation(e);
+      L.DomEvent.preventDefault(e);
+      locateUser();
+    };
+    
+    return div;
+  };
+  locateControl.addTo(map);
 
-        L.circleMarker([lat, lon], {
-          radius: 8,
-          fillColor: "#3388ff",
-          color: "#fff",
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.9
-        })
-          .addTo(map)
-          .bindPopup("<b>📍 Vous êtes ici</b>", {
-            className: "user-location-popup" // ← classe personnalisée
-          })
-          .openPopup();
-      },
-      function (err) {
-        console.warn("Géolocalisation refusée :", err.message);
+  // Fonction pour localiser l'utilisateur
+  function locateUser() {
+    if (navigator.geolocation) {
+      // Afficher une animation de chargement
+      const locateButton = document.querySelector('.locate-button');
+      if (locateButton) {
+        locateButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        locateButton.style.opacity = '0.8';
       }
-    );
+      
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          
+          // Animation fluide vers la position
+          map.flyTo([lat, lon], 13, {
+            duration: 1,
+            easeLinearity: 0.25
+          });
+          
+          // Supprimer le marqueur précédent s'il existe
+          if (window.userLocationMarker) {
+            map.removeLayer(window.userLocationMarker);
+          }
+          
+          // Ajouter un nouveau marqueur
+          window.userLocationMarker = L.circleMarker([lat, lon], {
+            radius: 8,
+            fillColor: "#3388ff",
+            color: "#fff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.9
+          })
+            .addTo(map)
+            .bindPopup("<b>📍 Vous êtes ici</b>", {
+              className: "user-location-popup"
+            });
+          
+          // Rétablir l'icône originale après un délai
+          setTimeout(() => {
+            if (locateButton) {
+              locateButton.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+              locateButton.style.opacity = '1';
+            }
+            window.userLocationMarker.openPopup();
+          }, 1000);
+        },
+        function (err) {
+          console.warn("Géolocalisation refusée :", err.message);
+          showSystemMessage("Géolocalisation refusée", true);
+          
+          // Rétablir l'icône originale en cas d'erreur
+          const locateButton = document.querySelector('.locate-button');
+          if (locateButton) {
+            locateButton.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+            locateButton.style.opacity = '1';
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }
+      );
+    } else {
+      showSystemMessage("Géolocalisation non supportée", true);
+    }
   }
+
+  // Localiser l'utilisateur automatiquement au chargement
+  locateUser();
 
   // Compter le nombre total de stations
   let stationsLoaded = 0;

@@ -520,6 +520,52 @@ h1 {
   background: #00ccaa;
 }
 
+/* Style pour le contrôle de localisation */
+.leaflet-locate-control {
+  background: transparent;
+  border: none;
+}
+
+.locate-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(128, 128, 128, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+.locate-button:hover {
+  background-color: rgba(128, 128, 128, 0.8);
+}
+
+/* Ajustement pour la position du contrôle */
+.leaflet-bottom.leaflet-right {
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+.leaflet-control {
+  margin-bottom: 15px !important;
+  margin-right: 15px !important;
+}
+
+/* Style cohérent avec les autres boutons flottants */
+.leaflet-locate-control .locate-button {
+  background-color: rgba(0, 128, 255, 0.5) !important;
+}
+
+.leaflet-locate-control .locate-button:hover {
+  background-color: rgba(0, 128, 255, 0.8) !important;
+}
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .carburant,
