@@ -403,8 +403,8 @@ function showMap() {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // Ajouter le bouton de recentrage avec le même style que les autres boutons
-  const locateControl = L.control({ position: "bottomright" });
+  // Ajouter le bouton de localisation en haut à gauche
+  const locateControl = L.control({ position: "topleft" });
   locateControl.onAdd = function (map) {
     const div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-locate-control");
     div.innerHTML = `
@@ -427,7 +427,7 @@ function showMap() {
   function locateUser() {
     if (navigator.geolocation) {
       // Afficher une animation de chargement
-      const locateButton = document.querySelector('.locate-button');
+      const locateButton = document.querySelector('.leaflet-locate-control .locate-button');
       if (locateButton) {
         locateButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
         locateButton.style.opacity = '0.8';
@@ -477,7 +477,7 @@ function showMap() {
           showSystemMessage("Géolocalisation refusée", true);
           
           // Rétablir l'icône originale en cas d'erreur
-          const locateButton = document.querySelector('.locate-button');
+          const locateButton = document.querySelector('.leaflet-locate-control .locate-button');
           if (locateButton) {
             locateButton.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
             locateButton.style.opacity = '1';
