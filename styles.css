@@ -475,13 +475,20 @@ h1 {
   flex: 1;
 }
 
-/* Ligne carburant + prix rapprochés */
+/* Style pour les carburants non disponibles */
+.fuel-unavailable {
+  color: #ff5555 !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Assurer la cohérence des styles */
 .price-line {
   font-size: 14px;
   margin: 2px 0;
   display: flex;
   justify-content: flex-start;
-  gap: 4px; /* ← petit espace seulement */
+  gap: 4px;
 }
 
 .fuel-price {
