@@ -553,7 +553,7 @@ function showMap() {
         } else {
           popupContent += `
         <div class="price-line">
-          Gazole : <span class="fuel-unavailable">Non disponible</span>
+          Gazole : <span class="fuel-unavailable">Indisponible</span>
         </div>
   `;
         }
@@ -568,7 +568,7 @@ function showMap() {
         } else {
           popupContent += `
         <div class="price-line">
-          SP95-E10 : <span class="fuel-unavailable">Non disponible</span>
+          SP95-E10 : <span class="fuel-unavailable">Indisponible</span>
         </div>
   `;
         }
