@@ -19,9 +19,76 @@ const selectedCity = localStorage.getItem("selectedCity") || "";
 const selectedStationId = localStorage.getItem("stationId") || "";
 let currentStationData = null;
 
+// Variables pour gérer l'état des boutons flottants
+let buttonsExpanded = false;
+const buttonDelay = 100;
+
+// Fonction pour initialiser les boutons flottants
+function initFloatingButtons() {
+  const mainButton = document.getElementById("mainFloatingButton");
+
+  if (!mainButton) {
+    console.error("Bouton principal non trouvé");
+    return;
+  }
+
+  // Ajouter l'événement click sur le bouton principal
+  mainButton.addEventListener("click", toggleButtons);
+
+  console.log("Boutons flottants initialisés");
+}
+
+// Fonction pour basculer l'état des boutons
+function toggleButtons() {
+  const mainButton = document.getElementById("mainFloatingButton");
+  const allButtons = document.querySelectorAll(".floating-buttons button:not(.main-button)");
+
+  if (!mainButton) return;
+
+  if (!buttonsExpanded) {
+    // Déployer les boutons - transformation en "-"
+    mainButton.innerHTML = '<i class="fa-solid fa-minus"></i>';
+
+    // Animation pour chaque bouton avec un délai (du bas vers le haut)
+    // Avec column-reverse, l'ordre est inversé donc on anime du premier au dernier
+    Array.from(allButtons).forEach((button, index) => {
+      setTimeout(() => {
+        button.classList.add("visible");
+      }, index * buttonDelay);
+    });
+  } else {
+    // Replier les boutons - transformation en "+"
+    mainButton.innerHTML = '<i class="fa-solid fa-plus"></i>';
+
+    // Animation pour chaque bouton avec un délai (du haut vers le bas)
+    // On inverse l'ordre pour l'animation de fermeture
+    Array.from(allButtons)
+      .reverse()
+      .forEach((button, index) => {
+        setTimeout(() => {
+          button.classList.remove("visible");
+        }, index * buttonDelay);
+      });
+  }
+
+  buttonsExpanded = !buttonsExpanded;
+}
+
+// Ajouter l'initialisation au chargement
+document.addEventListener("DOMContentLoaded", function () {
+  initFloatingButtons();
+});
+
+// ==================== FONCTIONS EXISTANTES ====================
+
 // Création des menus déroulants
 function createVilleEtStationSelectors() {
   const container = document.getElementById("stationSelectorContainer");
+
+  if (!container) {
+    console.error("Conteneur des sélecteurs non trouvé");
+    return;
+  }
 
   // Création du sélecteur de ville
   const villeSelect = document.createElement("select");
@@ -104,11 +171,10 @@ function createVilleEtStationSelectors() {
   container.appendChild(stationSelect);
 }
 
-createVilleEtStationSelectors();
+// Chargement des données de la station sélectionnée
+function loadStationData() {
+  if (!selectedStationId) return;
 
-// === CHARGEMENT DES DONNÉES DE LA STATION ===
-
-if (selectedStationId) {
   // Trouver le nom de la station sélectionnée
   let nomStation = "";
   Object.values(stationsParVille).some((stations) => {
@@ -184,17 +250,23 @@ if (selectedStationId) {
 
       // Afficher le bouton favori
       const favButton = document.getElementById("favoriteButton");
-      favButton.style.display = "block";
+      if (favButton) {
+        favButton.style.display = "flex";
 
-      // Vérifier si la station est déjà favorite (version optimisée)
-      const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
-      const isFavorite = favorites.some((fav) => fav.id === selectedStationId);
-      favButton.classList.toggle("active", isFavorite);
+        // Vérifier si la station est déjà favorite
+        const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
+        const isFavorite = favorites.some((fav) => fav.id === selectedStationId);
+        favButton.classList.toggle("active", isFavorite);
+      }
 
       const stationInfo = document.getElementById("stationInfo");
-      stationInfo.innerHTML = `<strong>${record.adresse}</strong><br>${record.cp} ${record.ville}, ${record.departement}, ${record.region}`;
+      if (stationInfo) {
+        stationInfo.innerHTML = `<strong>${record.adresse}</strong><br>${record.cp} ${record.ville}, ${record.departement}, ${record.region}`;
+      }
 
       const container = document.getElementById("carburantContainer");
+      if (!container) return;
+
       const indisponibles = record.carburants_indisponibles || [];
       const ruptures = record.carburants_rupture_temporaire || [];
 
@@ -224,8 +296,6 @@ if (selectedStationId) {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-            /*hour: "2-digit",
-            minute: "2-digit",*/
             timeZone: "Europe/Paris"
           });
         }
@@ -243,11 +313,6 @@ if (selectedStationId) {
     .catch((err) => {
       console.error("Erreur lors du chargement des données :", err);
     });
-} else {
-  // Si aucune station sélectionnée, vider l'affichage
-  document.getElementById("carburantContainer").innerHTML = "";
-  document.getElementById("stationInfo").innerHTML = "";
-  document.getElementById("favoriteButton").style.display = "none";
 }
 
 // Fonctions pour les favoris
@@ -260,7 +325,7 @@ function toggleFavorite() {
 
   if (existingIndex >= 0) {
     favorites.splice(existingIndex, 1);
-    favButton.classList.remove("active");
+    if (favButton) favButton.classList.remove("active");
     showSystemMessage("Station retirée des favoris", true);
   } else {
     favorites.push({
@@ -270,7 +335,7 @@ function toggleFavorite() {
       address: currentStationData.adresse || "",
       city: currentStationData.ville || ""
     });
-    favButton.classList.add("active");
+    if (favButton) favButton.classList.add("active");
     showSystemMessage("Station ajoutée aux favoris");
   }
 
@@ -312,23 +377,29 @@ function selectFavorite(stationId) {
   const stationSelect = document.getElementById("stationSelector");
 
   function handleStationSelection(ville, stationId) {
-    villeSelect.value = ville;
-    villeSelect.dispatchEvent(new Event("change"));
+    if (villeSelect) {
+      villeSelect.value = ville;
+      villeSelect.dispatchEvent(new Event("change"));
+    }
 
     function selectStation() {
-      stationSelect.value = stationId;
-      stationSelect.dispatchEvent(new Event("change"));
+      if (stationSelect) {
+        stationSelect.value = stationId;
+        stationSelect.dispatchEvent(new Event("change"));
 
-      // Mettre à jour l'étoile IMMÉDIATEMENT
-      const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
-      const favButton = document.getElementById("favoriteButton");
-      if (favorites.some((fav) => fav.id === stationId)) {
-        favButton.classList.add("active");
-      } else {
-        favButton.classList.remove("active");
+        // Mettre à jour l'étoile IMMÉDIATEMENT
+        const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
+        const favButton = document.getElementById("favoriteButton");
+        if (favButton) {
+          if (favorites.some((fav) => fav.id === stationId)) {
+            favButton.classList.add("active");
+          } else {
+            favButton.classList.remove("active");
+          }
+        }
+
+        document.querySelector(".favorites-modal")?.remove();
       }
-
-      document.querySelector(".favorites-modal")?.remove();
     }
 
     setTimeout(selectStation, 100);
@@ -379,7 +450,6 @@ function actualiserALHeure() {
     location.reload();
   }, delai);
 }
-actualiserALHeure();
 
 // === Bouton Carte ===
 function showMap() {
@@ -647,13 +717,17 @@ function handleStationSelection(ville, stationId) {
   const villeSelect = document.getElementById("villeSelector");
   const stationSelect = document.getElementById("stationSelector");
 
-  villeSelect.value = ville;
-  villeSelect.dispatchEvent(new Event("change"));
+  if (villeSelect) {
+    villeSelect.value = ville;
+    villeSelect.dispatchEvent(new Event("change"));
+  }
 
   setTimeout(function selectStation() {
-    stationSelect.value = stationId;
-    stationSelect.dispatchEvent(new Event("change"));
-    document.querySelector(".map-modal")?.remove();
+    if (stationSelect) {
+      stationSelect.value = stationId;
+      stationSelect.dispatchEvent(new Event("change"));
+      document.querySelector(".map-modal")?.remove();
+    }
   }, 100);
 }
 
@@ -665,5 +739,45 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Afficher le bouton des favoris dès le chargement
-document.getElementById("favoritesButton").style.display = "block";
+// ==================== INITIALISATION ====================
+
+// Fonction d'initialisation principale
+function initApp() {
+  console.log("Initialisation de l'application");
+
+  // Initialiser les menus déroulants
+  createVilleEtStationSelectors();
+
+  // Charger les données de la station si une station est sélectionnée
+  if (selectedStationId) {
+    loadStationData();
+  } else {
+    // Si aucune station sélectionnée, vider l'affichage
+    const carburantContainer = document.getElementById("carburantContainer");
+    const stationInfo = document.getElementById("stationInfo");
+    const favoriteButton = document.getElementById("favoriteButton");
+
+    if (carburantContainer) carburantContainer.innerHTML = "";
+    if (stationInfo) stationInfo.innerHTML = "";
+    if (favoriteButton) favoriteButton.style.display = "none";
+  }
+
+  // Initialiser les boutons flottants
+  initFloatingButtons();
+
+  // Afficher le bouton des favoris
+  const favoritesButton = document.getElementById("favoritesButton");
+  if (favoritesButton) favoritesButton.style.display = "flex";
+
+  // Démarrer la mise à jour automatique
+  actualiserALHeure();
+
+  console.log("Application initialisée");
+}
+
+// Démarrer l'application lorsque le DOM est chargé
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}

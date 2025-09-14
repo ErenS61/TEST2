@@ -35,30 +35,30 @@
 
     <!-- Boutons flottants -->
     <div class="floating-buttons">
-      <!-- Bouton pour afficher la carte -->
-<button class="map-button" onclick="showMap()">
-  <i class="fa-solid fa-map-location-dot"></i>
-</button>
-
-
-      <!-- Bouton pour ajouter/enlever des favoris -->
-      <button class="favorite-button" onclick="toggleFavorite()" id="favoriteButton" style="display: none">
-        <i class="fa-solid fa-star"></i>
+      <!-- Bouton principal en BAS -->
+      <button class="main-button" id="mainFloatingButton">
+        <i class="fa-solid fa-plus"></i>
       </button>
 
-      <!-- Bouton pour afficher les favoris -->
-      <button class="favorites-button" onclick="showFavorites()" id="favoritesButton" style="display: none">
-        <i class="fa-solid fa-gas-pump"></i>
+      <!-- Autres boutons (s'afficheront AU-DESSUS) -->
+      <button class="scroll-top-button" onclick="scrollToTop()">
+        <i class="fa-solid fa-caret-up"></i>
       </button>
 
-      <!-- Bouton pour rafraîchir la page -->
       <button class="refresh-button" onclick="refreshPage()">
         <i class="fa-solid fa-rotate-right"></i>
       </button>
 
-      <!-- Bouton pour remonter en haut de la page -->
-      <button class="scroll-top-button" onclick="scrollToTop()">
-        <i class="fa-solid fa-caret-up"></i>
+      <button class="favorites-button" onclick="showFavorites()" id="favoritesButton">
+        <i class="fa-solid fa-gas-pump"></i>
+      </button>
+
+      <button class="favorite-button" onclick="toggleFavorite()" id="favoriteButton">
+        <i class="fa-solid fa-star"></i>
+      </button>
+
+      <button class="map-button" onclick="showMap()">
+        <i class="fa-solid fa-map-location-dot"></i>
       </button>
     </div>
 
