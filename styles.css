@@ -633,6 +633,7 @@ h1 {
 }
 
 /* ==================== RESPONSIVE ==================== */
+
 @media (max-width: 1024px) {
   .carburant,
   .rupture {
@@ -692,33 +693,12 @@ h1 {
   .map-content {
     padding: 0.8rem;
   }
-
-  /* Ajustements des boutons flottants sur mobile */
-  .floating-buttons {
-    bottom: 15px;
-    right: 15px;
-  }
-
-  .floating-buttons button {
-    height: 50px;
-    width: 50px;
-    padding: 12px;
-    font-size: 20px;
-  }
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 1.5rem 1rem;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
   .carburant,
   .rupture {
-    width: 100%;
+    width: 80%;
   }
 
   .type,
@@ -727,11 +707,11 @@ h1 {
   }
 
   .prix {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
 
   .rupture .message {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   .maj {
@@ -751,25 +731,19 @@ h1 {
     width: 90%;
     padding: 0.5rem;
   }
+}
 
-  #villeSelector,
-  #stationSelector {
-    width: 100%;
-    max-width: 260px;
-  }
+/* Ajustements supplémentaires des boutons flottants sur petit mobile */
+.floating-buttons {
+  bottom: 10px;
+  right: 10px;
+}
 
-  /* Ajustements supplémentaires des boutons flottants sur petit mobile */
-  .floating-buttons {
-    bottom: 10px;
-    right: 10px;
-  }
-
-  .floating-buttons button {
-    height: 45px;
-    width: 45px;
-    padding: 10px;
-    font-size: 18px;
-  }
+.floating-buttons button {
+  height: 45px;
+  width: 45px;
+  padding: 10px;
+  font-size: 18px;
 }
 
 /* Animation supplémentaire pour le bouton principal */
