@@ -733,10 +733,11 @@ h1 {
   }
 }
 
-/* Ajustements supplémentaires des boutons flottants sur petit mobile */
+/*  Ajustements supplémentaires des boutons flottants sur petit mobile 
+ 
 .floating-buttons {
-  bottom: 10px;
-  right: 10px;
+  bottom: 15px;
+  right: 15px;
 }
 
 .floating-buttons button {
@@ -744,7 +745,7 @@ h1 {
   width: 45px;
   padding: 10px;
   font-size: 18px;
-}
+} */
 
 /* Animation supplémentaire pour le bouton principal */
 @keyframes pulse {
