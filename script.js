@@ -651,6 +651,9 @@ function showMap() {
       <button onclick="selectStationFromMap('${station.id}')" class="popup-button">
         Voir détails
       </button>
+      <button onclick="navigateToStation(${lat}, ${lon}, '${(record.adresse || "") + ", " + (record.ville || ville)}')" class="popup-button navigate-button">
+        Y aller
+      </button>
     </div>
   </div>
 `;
@@ -688,6 +691,79 @@ function showMap() {
       loadStation(station, ville);
     });
   });
+}
+
+// Fonction pour naviguer vers une station
+function navigateToStation(lat, lon, address) {
+  // Vérifier si l'utilisateur a déjà fait un choix
+  const navigationPreference = localStorage.getItem("navigationPreference");
+
+  if (navigationPreference) {
+    // Utiliser le choix précédent
+    openNavigationApp(lat, lon, address, navigationPreference);
+  } else {
+    // Demander à l'utilisateur de choisir
+    showNavigationChoiceModal(lat, lon, address);
+  }
+}
+
+// Fonction pour afficher le choix de navigation
+function showNavigationChoiceModal(lat, lon, address) {
+  const modal = document.createElement("div");
+  modal.className = "navigation-modal";
+
+  modal.innerHTML = `
+    <div class="navigation-content">
+      <button class="close-navigation" onclick="this.parentElement.parentElement.remove()">&times;</button>
+      <h2>Choisir une application de navigation</h2>
+      <div class="navigation-options">
+        <button class="navigation-option" onclick="selectNavigationApp(${lat}, ${lon}, '${address.replace(/'/g, "\\'")}', 'google')">
+          <i class="fa-brands fa-google"></i>
+          Google Maps
+        </button>
+        <button class="navigation-option" onclick="selectNavigationApp(${lat}, ${lon}, '${address.replace(/'/g, "\\'")}', 'apple')">
+          <i class="fa-brands fa-apple"></i>
+          Apple Plans
+        </button>
+      </div>
+      <div class="navigation-remember">
+        <input type="checkbox" id="rememberChoice">
+        <label for="rememberChoice">Se souvenir de mon choix</label>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.style.display = "flex";
+}
+
+// Fonction pour sélectionner une application de navigation
+function selectNavigationApp(lat, lon, address, app) {
+  const rememberChoice = document.getElementById("rememberChoice")?.checked;
+
+  if (rememberChoice) {
+    localStorage.setItem("navigationPreference", app);
+  }
+
+  openNavigationApp(lat, lon, address, app);
+
+  // Fermer le modal
+  document.querySelector(".navigation-modal")?.remove();
+}
+
+// Fonction pour ouvrir l'application de navigation choisie
+function openNavigationApp(lat, lon, address, app) {
+  let url;
+
+  if (app === "google") {
+    // Google Maps
+    url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=driving`;
+  } else {
+    // Apple Maps
+    url = `https://maps.apple.com/?daddr=${lat},${lon}&dirflg=d&t=m`;
+  }
+
+  window.open(url, "_blank");
 }
 
 // Fonction pour sélectionner une station depuis la carte
