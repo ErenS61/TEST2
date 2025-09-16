@@ -650,8 +650,7 @@ function showMap() {
     <div class="popup-footer">
       <button onclick="selectStationFromMap('${station.id}')" class="popup-button">
         Voir détails
-      </button>
-      <button onclick="navigateToStation(${lat}, ${lon}, '${(record.adresse || "") + ", " + (record.ville || ville)}')" class="popup-button navigate-button">
+      <button onclick="navigateToStation(${lat}, ${lon}, '${(record.adresse || "").replace(/'/g, "\\'") + ", " + (record.ville || ville).replace(/'/g, "\\'")}')" class="popup-button navigate-button">
         Y aller
       </button>
     </div>
@@ -725,6 +724,10 @@ function showNavigationChoiceModal(lat, lon, address) {
           <i class="fa-brands fa-apple"></i>
           Apple Plans
         </button>
+        <button class="navigation-option" onclick="selectNavigationApp(${lat}, ${lon}, '${address.replace(/'/g, "\\'")}', 'waze')">
+          <i class="fa-brands fa-waze"></i>
+          Waze
+        </button>
       </div>
       <div class="navigation-remember">
         <input type="checkbox" id="rememberChoice">
@@ -758,9 +761,12 @@ function openNavigationApp(lat, lon, address, app) {
   if (app === "google") {
     // Google Maps
     url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&travelmode=driving`;
-  } else {
+  } else if (app === "apple") {
     // Apple Maps
     url = `https://maps.apple.com/?daddr=${lat},${lon}&dirflg=d&t=m`;
+  } else if (app === "waze") {
+    // Waze
+    url = `https://www.waze.com/ul?ll=${lat},${lon}&navigate=yes`;
   }
 
   window.open(url, "_blank");

@@ -624,6 +624,18 @@ h1 {
   background: #2a70cc !important;
 }
 
+.navigation-option .fa-w {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* Ou utilisez une icône alternative si Waze n'est pas disponible */
+.navigation-option .fa-w:before {
+  content: "W";
+  font-weight: bold;
+}
+
 /* ==================== MODAL CHOIX NAVIGATION ==================== */
 .navigation-modal {
   position: fixed;
