@@ -14,12 +14,12 @@ const servicesConfig = {
     // Services véhicules
     "Lavage automatique": "fa-solid fa-car-wash",
     "Lavage manuel": "fa-solid fa-hand-sparkles",
-    Laverie: "fa-solid fa-washing-machine",
+    "Laverie": "fa-solid fa-washing-machine",
 
     "Location de véhicule": "fa-solid fa-car",
     "Relais colis": "fa-solid fa-person-carry-box",
     "Services réparation / entretien": "fa-solid fa-screwdriver-wrench",
-    Douches: "fa-solid fa-shower",
+    "Douches": "fa-solid fa-shower",
 
     // Services boutique
     "Boutique alimentaire": "fa-solid fa-utensils",
@@ -27,14 +27,14 @@ const servicesConfig = {
 
     "Restauration à emporter": "fa-solid fa-hamburger",
     "Restauration sur place": "fa-solid fa-utensils",
-    Bar: "fa-solid fa-coffee",
+    "Bar": "fa-solid fa-coffee",
     "Toilettes publiques": "fa-solid fa-restroom",
 
     // Services financiers
     "DAB (Distributeur automatique de billets)": "fa-solid fa-money-from-bracket",
 
     // Services divers
-    Wifi: "fa-solid fa-wifi",
+    "Wifi": "fa-solid fa-wifi",
     "Espace bébé": "fa-solid fa-baby",
 
     "Aire de camping-cars": "fa-solid fa-campground",
@@ -46,7 +46,7 @@ const servicesConfig = {
 
     // Services carburants spécifiques
 
-    GNV: "fa-solid fa-gas-pump"
+    "GNV": "fa-solid fa-gas-pump"
 };
 
 // Fonction pour obtenir l'icône d'un service
