@@ -770,14 +770,15 @@ function showServices() {
     servicesHTML = '<div class="services-grid">';
     services.forEach((service) => {
       const icon = getServiceIcon(service);
+      const color = getServiceColor(service);
       servicesHTML += `
-        <div class="service-item">
-          <div class="service-icon">
+    <div class="service-item">
+        <div class="service-icon" style="color: ${color}">
             <i class="${icon}"></i>
-          </div>
-          <div class="service-name">${service}</div>
         </div>
-      `;
+        <div class="service-name">${service}</div>
+    </div>
+`;
     });
     servicesHTML += "</div>";
   }
