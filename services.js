@@ -4,11 +4,11 @@
 const servicesConfig = {
     // Services de base
     "Automate CB 24/24": "fa-solid fa-credit-card",
-    "Vente de gaz domestique (Butane, Propane)": "fa-solid fa-fire-flame-simple",
-    "Vente de fioul domestique": "fa-solid fa-oil-can",
-    "Vente de pétrole lampant": "fa-solid fa-fire",
+    "Vente de gaz domestique (Butane, Propane)": "fa-solid fa-fire",
+    "Vente de fioul domestique": "fa-solid fa-gas-pump",
+    "Vente de pétrole lampant": "fa-solid fa-gas-pump",
     "Carburant additivé": "fa-solid fa-flask",
-    "Station de gonflage": "fa-solid fa-wind",
+    "Station de gonflage": "fa-solid fa-tire-flat",
     "Vente d'additifs carburants": "fa-solid fa-vial",
 
     // Services véhicules
@@ -16,19 +16,19 @@ const servicesConfig = {
     "Lavage manuel": "fa-solid fa-hand-sparkles",
     "Laverie": "fa-solid fa-washing-machine",
 
-    "Location de véhicule": "fa-solid fa-car",
-    "Relais colis": "fa-solid fa-person-carry-box",
+    "Location de véhicule": "fa-solid fa-car-key",
+    "Relais colis": "fa-solid fa-box-isometric-tape",
     "Services réparation / entretien": "fa-solid fa-screwdriver-wrench",
     "Douches": "fa-solid fa-shower",
 
     // Services boutique
-    "Boutique alimentaire": "fa-solid fa-utensils",
+    "Boutique alimentaire": "fa-solid fa-shop",
     "Boutique non alimentaire": "fa-solid fa-store",
 
     "Restauration à emporter": "fa-solid fa-hamburger",
     "Restauration sur place": "fa-solid fa-utensils",
     "Bar": "fa-solid fa-coffee",
-    "Toilettes publiques": "fa-solid fa-restroom",
+    "Toilettes publiques": "fa-solid fa-restroom-simple",
 
     // Services financiers
     "DAB (Distributeur automatique de billets)": "fa-solid fa-money-from-bracket",

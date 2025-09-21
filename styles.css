@@ -404,13 +404,21 @@ h1 {
   background: none;
   border: none;
   color: #aaa;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
 }
 
 .close-favorites:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ==================== MESSAGES SYSTÈME ==================== */
@@ -467,14 +475,21 @@ h1 {
   right: 10px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #aaa;
   cursor: pointer;
   transition: color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .close-map:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Style pour les marqueurs personnalisés sur la carte */
@@ -716,13 +731,21 @@ h1 {
   background: none;
   border: none;
   color: #aaa;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: color 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
 }
 
 .close-navigation:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Bouton de navigation spécifique */
