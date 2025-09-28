@@ -215,7 +215,8 @@ function loadStationData() {
       "carburants_indisponibles",
       "carburants_rupture_temporaire",
       "geom",
-      "services_service"
+      "services_service",
+      "horaires"
     ].join(", "),
     limit: "1",
     refine: `id:${selectedStationId}`,
@@ -799,8 +800,116 @@ function refreshPage() {
   location.reload();
 }
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+// Fonction pour parser les horaires
+function parseHoraires(horairesString) {
+  try {
+    const horaires = JSON.parse(horairesString);
+    let result = {
+      automate24: horaires["@automate-24-24"] === "1",
+      jours: []
+    };
+
+    // Traiter chaque jour
+    horaires.jour.forEach((jour) => {
+      const nomJour = jour["@nom"];
+      const ferme = jour["@ferme"] === "1";
+      let horaireText = "";
+
+      if (ferme) {
+        horaireText = "Fermé";
+      } else if (jour.horaire) {
+        const horaire = jour.horaire;
+
+        if (Array.isArray(horaire)) {
+          // Cas avec plusieurs créneaux (ex: dimanche)
+          const creneaux = horaire.map(
+            (h) => `${h["@ouverture"].replace(".", "h")}-${h["@fermeture"].replace(".", "h")}`
+          );
+          horaireText = creneaux.join(" et ");
+        } else {
+          // Cas normal (un seul créneau)
+          const ouverture = horaire["@ouverture"].replace(".", "h");
+          const fermeture = horaire["@fermeture"].replace(".", "h");
+          horaireText = `${ouverture} - ${fermeture}`;
+        }
+      } else {
+        horaireText = "Horaires non précisés";
+      }
+
+      result.jours.push({
+        nom: nomJour,
+        horaire: horaireText,
+        ferme: ferme
+      });
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Erreur parsing horaires:", error);
+    return null;
+  }
+}
+
+// Fonction pour afficher les horaires
+function showHours() {
+  if (!currentStationData || !currentStationData.horaires) {
+    showSystemMessage("Aucune information d'horaire disponible pour cette station", true);
+    return;
+  }
+
+  const horaires = parseHoraires(currentStationData.horaires);
+  if (!horaires) {
+    showSystemMessage("Erreur lors du chargement des horaires", true);
+    return;
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "hours-modal";
+
+  let hoursHTML = "";
+
+  if (horaires.automate24) {
+    hoursHTML += `
+            <div class="hours-automate">
+                ⏳💳 Automate CB 24h/24 disponible
+            </div>
+        `;
+  }
+
+  hoursHTML += '<div class="hours-list">';
+
+  horaires.jours.forEach((jour) => {
+    const statusClass = jour.ferme ? "hours-day-time" : "hours-day-time";
+    const statusIcon = jour.ferme ? "❌" : "✅";
+
+    hoursHTML += `
+            <div class="hours-day">
+                <span class="hours-day-name">${jour.nom}</span>
+                <span class="${statusClass}">${statusIcon} ${jour.horaire}</span>
+            </div>
+        `;
+  });
+
+  hoursHTML += "</div>";
+
+  // Ajout de la mention d'information
+  hoursHTML += `
+        <div class="hours-disclaimer">
+            <small>⚠️ Les horaires affichés peuvent ne pas être à jour ou être erronés.<br>
+            Nous vous recommandons de consulter le site web officiel de la station pour confirmation.</small>
+        </div>
+    `;
+
+  modal.innerHTML = `
+        <div class="hours-content">
+            <button class="close-hours" onclick="this.parentElement.parentElement.remove()">&times;</button>
+            <h2>🕒 Horaires - ${currentStationData.nom}</h2>
+            ${hoursHTML}
+        </div>
+    `;
+
+  document.body.appendChild(modal);
+  modal.style.display = "flex";
 }
 
 // ==================== INITIALISATION ====================
@@ -821,11 +930,13 @@ function initApp() {
     const stationInfo = document.getElementById("stationInfo");
     const favoriteButton = document.getElementById("favoriteButton");
     const servicesButton = document.getElementById("servicesButton");
+    const hoursButton = document.getElementById("hoursButton");
 
     if (carburantContainer) carburantContainer.innerHTML = "";
     if (stationInfo) stationInfo.innerHTML = "";
     if (favoriteButton) favoriteButton.style.display = "none";
     if (servicesButton) servicesButton.style.display = "none";
+    if (hoursButton) hoursButton.style.display = "none";
   }
 
   // Initialiser les boutons flottants
