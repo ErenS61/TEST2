@@ -72,11 +72,6 @@ function toggleButtons() {
   buttonsExpanded = !buttonsExpanded;
 }
 
-// Ajouter l'initialisation au chargement
-document.addEventListener("DOMContentLoaded", function () {
-  initFloatingButtons();
-});
-
 // Création des menus déroulants
 function createVilleEtStationSelectors() {
   const container = document.getElementById("stationSelectorContainer");
@@ -90,6 +85,11 @@ function createVilleEtStationSelectors() {
   const villeSelect = document.createElement("select");
   villeSelect.id = "villeSelector";
   villeSelect.innerHTML = '<option value="">Choisir une ville...</option>';
+
+  // Ajouter la classe pour le clignotement si valeur par défaut
+  if (!selectedCity) {
+    villeSelect.classList.add("default-selection");
+  }
 
   // Remplissage des villes
   Object.keys(stationsParVille)
@@ -108,6 +108,11 @@ function createVilleEtStationSelectors() {
   stationSelect.style.display = selectedCity ? "inline-block" : "none";
   stationSelect.innerHTML = '<option value="">Choisir une station...</option>';
 
+  // Ajouter la classe pour le clignotement si valeur par défaut
+  if (!selectedStationId) {
+    stationSelect.classList.add("default-selection");
+  }
+
   // Remplissage des stations si une ville est sélectionnée
   if (selectedCity && stationsParVille[selectedCity]) {
     stationsParVille[selectedCity].forEach((station) => {
@@ -122,12 +127,23 @@ function createVilleEtStationSelectors() {
   // Gestion du changement de ville
   villeSelect.addEventListener("change", function () {
     const ville = this.value;
+
+    // Gérer le clignotement
+    if (ville) {
+      this.classList.remove("default-selection");
+    } else {
+      this.classList.add("default-selection");
+    }
+
     localStorage.setItem("selectedCity", ville);
     localStorage.removeItem("stationId");
 
     // Mise à jour du sélecteur de stations
     stationSelect.innerHTML = '<option value="">Choisir une station...</option>';
     stationSelect.style.display = "none";
+
+    // Réinitialiser le clignotement de la station
+    stationSelect.classList.add("default-selection");
 
     if (ville && stationsParVille[ville]) {
       stationsParVille[ville].forEach((station) => {
@@ -145,11 +161,19 @@ function createVilleEtStationSelectors() {
     document.getElementById("stationInfo").innerHTML = "";
     document.getElementById("favoriteButton").style.display = "none";
     document.getElementById("servicesButton").style.display = "none";
+    document.getElementById("hoursButton").style.display = "none";
   });
 
   // Gestion du changement de station
   stationSelect.addEventListener("change", function () {
     const stationId = this.value;
+
+    // Gérer le clignotement
+    if (stationId) {
+      this.classList.remove("default-selection");
+    } else {
+      this.classList.add("default-selection");
+    }
 
     if (stationId) {
       localStorage.setItem("stationId", stationId);
@@ -161,6 +185,7 @@ function createVilleEtStationSelectors() {
       document.getElementById("stationInfo").innerHTML = "";
       document.getElementById("favoriteButton").style.display = "none";
       document.getElementById("servicesButton").style.display = "none";
+      document.getElementById("hoursButton").style.display = "none";
     }
   });
 
@@ -382,12 +407,14 @@ function selectFavorite(stationId) {
   function handleStationSelection(ville, stationId) {
     if (villeSelect) {
       villeSelect.value = ville;
+      villeSelect.classList.remove("default-selection"); // Retirer le clignotement
       villeSelect.dispatchEvent(new Event("change"));
     }
 
     function selectStation() {
       if (stationSelect) {
         stationSelect.value = stationId;
+        stationSelect.classList.remove("default-selection"); // Retirer le clignotement
         stationSelect.dispatchEvent(new Event("change"));
         const favorites = JSON.parse(localStorage.getItem("fuelFavorites")) || [];
         const favButton = document.getElementById("favoriteButton");
@@ -741,11 +768,13 @@ function handleStationSelection(ville, stationId) {
   const stationSelect = document.getElementById("stationSelector");
   if (villeSelect) {
     villeSelect.value = ville;
+    villeSelect.classList.remove("default-selection"); // Retirer le clignotement
     villeSelect.dispatchEvent(new Event("change"));
   }
   setTimeout(function selectStation() {
     if (stationSelect) {
       stationSelect.value = stationId;
+      stationSelect.classList.remove("default-selection"); // Retirer le clignotement
       stationSelect.dispatchEvent(new Event("change"));
       document.querySelector(".map-modal")?.remove();
     }

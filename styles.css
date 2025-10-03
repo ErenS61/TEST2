@@ -76,6 +76,34 @@ h1 {
   overflow: hidden;
 }
 
+/* ==================== SÉLECTEURS AVEC CLIGNOTEMENT ==================== */
+#villeSelector.default-selection,
+#stationSelector.default-selection {
+  border: 2px solid #ff3333;
+  box-shadow: 0 0 10px #ff000055;
+  animation: blink-selector 1.5s infinite;
+}
+
+@keyframes blink-selector {
+  0%,
+  100% {
+    border-color: #ff3333;
+    box-shadow: 0 0 10px #ff000055;
+  }
+  50% {
+    border-color: #ff9999;
+    box-shadow: 0 0 15px #ff000099;
+  }
+}
+
+/* Style normal quand une valeur est sélectionnée */
+#villeSelector:not(.default-selection),
+#stationSelector:not(.default-selection) {
+  border: 1px solid #555;
+  box-shadow: none;
+  animation: none;
+}
+
 /* ==================== CONTENEUR CARBURANTS ==================== */
 .carburant-container {
   display: flex;
