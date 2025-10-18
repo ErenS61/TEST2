@@ -64,8 +64,8 @@ const stationsParVille = {
     { id: "68490001", nom: "TotalEnergies - Liebenguth", logo: "Logo/TotalEnergies.png" }
   ],
   "Pfastatt": [
-    { id: "68120002", nom: "Super U Pfastatt", logo: "Logo/Super U.png" }
-    { id: "68120005", nom: "TotalEnergies Access - Relais de Pfastatt", logo: "Logo/TotalEnergies Access.png" },
+    { id: "68120002", nom: "Super U Pfastatt", logo: "Logo/Super U.png" },
+    { id: "68120005", nom: "TotalEnergies Access - Relais de Pfastatt", logo: "Logo/TotalEnergies Access.png" }
   ],
   "Sausheim": [
     { id: "68390003", nom: "Avia Sausheim", logo: "Logo/Avia.png" },
