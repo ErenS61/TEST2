@@ -4,19 +4,19 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Gotham", sans-serif;
 }
 
 @font-face {
-  font-family: "Montserrat";
-  src: url("./fonts/Montserrat-Regular.woff2") format("woff2");
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-Book.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Montserrat";
-  src: url("./fonts/Montserrat-Bold.woff2") format("woff2");
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-Bold.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
 }
@@ -520,7 +520,7 @@ h1 {
 
 /* Popup par défaut (stations) */
 .leaflet-popup-content {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Gotham", sans-serif;
   margin: 12px;
   white-space: normal !important;
   word-wrap: break-word;
@@ -576,7 +576,7 @@ h1 {
 
 /* Bloc principal */
 .popup-container {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Gotham", sans-serif;
   font-size: 14px;
   width: 260px !important;
 }
