@@ -479,7 +479,7 @@ h1 {
 
 .map-content {
   background: #1a1a1a;
-  border: 2px solid #00ffcc;
+  border: 2px solid #0080ff;
   border-radius: 12px;
   padding: 1rem;
   width: 95vw;
@@ -487,6 +487,7 @@ h1 {
   max-height: 85vh;
   overflow: hidden;
   position: relative;
+  box-shadow: 0 0 20px #0080ff99;
 }
 
 .close-map {
@@ -571,7 +572,7 @@ h1 {
   margin-top: 0.5rem;
   margin-bottom: 0.8rem;
   font-size: 1.5rem;
-  color: #00ffcc;
+  color: #0080ff;
 }
 
 /* Bloc principal */
@@ -838,21 +839,21 @@ h1 {
 
 .services-content {
   background: linear-gradient(160deg, #222, #333);
-  border: 2px solid #00ffcc;
+  border: 2px solid #ff69b4;
   border-radius: 15px;
   padding: 1.5rem;
   width: 95vw;
   max-width: 700px;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 0 20px #00ffcc99;
+  box-shadow: 0 0 20px #ff69b499;
   margin: auto;
   box-sizing: border-box;
   animation: fadeInScale 0.3s ease-out forwards;
 }
 
 .services-content h2 {
-  color: #00ffcc;
+  color: #ff69b4;
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 1.5rem;
@@ -939,11 +940,11 @@ h1 {
 
 /* Style pour le bouton services dans les boutons flottants */
 .services-button {
-  background-color: rgba(0, 128, 128, 0.5) !important;
+  background-color: rgba(255, 105, 180, 0.5) !important;
 }
 
 .services-button:hover {
-  background-color: rgba(0, 128, 128, 0.8) !important;
+  background-color: rgba(255, 105, 180, 0.8) !important;
 }
 
 /* Animation d'entrée */
