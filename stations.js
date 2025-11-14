@@ -8,7 +8,8 @@ const stationsParVille = {
     { id: "68200020", nom: "TotalEnergies Access - Relais de Dornach", logo: "Logo/TotalEnergies Access.png" },
     { id: "68200018", nom: "TotalEnergies Access - Relais Musée de l'Automobile", logo: "Logo/TotalEnergies Access.png" },
     { id: "68100009", nom: "TotalEnergies - Relais du Rebberg", logo: "Logo/TotalEnergies.png" },
-    { id: "68100006", nom: "Avia Mulhouse", logo: "Logo/Avia.png" }
+    { id: "68100006", nom: "Avia Mulhouse", logo: "Logo/Avia.png" },
+    { id: "68200026", nom: "Costco Mulhouse", logo: "Logo/Costco.png" }
   ],
   "Illzach": [
     { id: "68110009", nom: "Eni Illzach", logo: "Logo/Eni.png" },
