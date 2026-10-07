@@ -74,5 +74,9 @@ const stationsParVille = {
   ],
   "Wittelsheim": [
     { id: "68310001", nom: "Super U Wittelsheim", logo: "Logo/Super U.png" }
+  ],
+  "Burnhaupt-le-Bas": [
+    { id: "68520006", nom: "TotalEnergies - Relais de la Porte d'Alsace Nord", logo: "Logo/TotalEnergies.png" },
+    { id: "68520011", nom: "Eni - Porte d'Alsace", logo: "Logo/Eni.png" }
   ]
 };
